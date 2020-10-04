@@ -1,0 +1,61 @@
+experiment_name: 'bert icd'
+num_gpu: 2                          # GPU数量
+device_id: '0,1'
+visual_device: '0,1'
+main_device_id: '0'
+resume_path: null                         # path to latest checkpoint
+
+
+# 模型
+model_arch:
+  type: 'bert'
+  args:
+    bert_path: '/home/lizhen/pretrain_models/pytorch/chinese_roberta_wwm_ext_pytorch'
+    bert_train: true
+    dropout: 0.5
+
+data_set:
+  type: 'RetrieveDataSet'
+  args:
+    data_dir: 'data/json_data'
+    vocab_file: 'data/vocabs/roberta_zh_vocab.txt'
+    do_lower_case: true                 # "Whether to lower case the input text. Should be True for uncased "
+    do_whole_word_mask: false           # "Whether to use whole word masking rather than per-WordPiece masking."
+    max_predictions_per_seq: 20         # "Maximum number of masked LM predictions per sequence."
+    dupe_factor: 10                     # "Number of times to duplicate the input data (with different masks)."
+    masked_lm_prob: 0.15                # "Masked LM probability."
+    short_seq_prob: 0.1                 # "Probability of creating sequences which are shorter than the maximum length."
+    max_seq_length: 512
+    transformers_model: '/home/lizhen/pretrain_models/pytorch/chinese_roberta_wwm_ext_pytorch'
+    valid_size: 0.3
+    shuffle: true
+    batch_size: 16
+
+optimizer:
+  type: 'AdamW'
+  args:
+    learning_rate: 1e-5
+
+lr_scheduler:
+  type: 'get_linear_schedule_with_warmup'
+  args:
+    num_warmup_steps: 3
+
+loss:
+  - 'tag_loss'
+
+metrics:
+  - 'tag_accuracy'
+  - 'tag_precision'
+  - 'tag_recall'
+  - 'tag_f1_score'
+
+trainer:
+  epochs: 100
+  save_dir: 'saved/'
+  save_perioid: 1
+  verbosity: 2
+  monitor: "max val_tag_f1_score"
+  early_stop: 20
+  tensorboard: true
+
