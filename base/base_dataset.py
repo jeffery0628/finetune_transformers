@@ -7,12 +7,11 @@
 # @Description:
 import random
 from pathlib import Path
-from typing import List, Optional, Union
-
+from typing import List, Optional
+import torch
 import tfrecord
 from dataclasses import dataclass
 from sklearn.model_selection import KFold
-from torch import nn
 from torch.utils.data.dataset import Dataset
 from transformers import LongformerTokenizer, BertTokenizer, AlbertTokenizer, AutoTokenizer
 
@@ -72,11 +71,16 @@ class BaseDataSet(Dataset):
         raise NotImplementedError
 
     def save_features_to_cache(self):
-        raise NotImplementedError
+        features = self.convert_examples_to_features()
+        if self.shuffle:
+            random.shuffle(features)
+        print('saving {} feature to cache file : {}...'.format(self.data_mode,self.feature_cache_file))
+        torch.save(features, self.feature_cache_file)
+        return features
 
     def load_features_from_cache(self):
-
-        raise NotImplementedError
+        print('loading {} features from cache file : {}...'.format(self.data_mode,self.feature_cache_file))
+        return torch.load(self.feature_cache_file)
 
     def __len__(self):
         return len(self.features)

@@ -16,7 +16,7 @@ __all__ = ["makeModel", "makeLoss", "makeMetrics", "makeOptimizer", "makeLrSched
 
 
 def makeModel(config):
-    return config.init_obj('model', module_models, )
+    return config.init_obj('model_arch', module_models, )
 
 
 def makeLoss(config):

@@ -11,11 +11,8 @@ from datetime import datetime
 from functools import reduce, partial
 from operator import getitem
 from pathlib import Path
-from pathlib import Path
-
-from logger import setup_logging
 from utils import read_yaml, write_yaml
-
+from logger import setup_logging
 
 class ConfigParser:
     def __init__(self, config, resume=None, run_id=None):

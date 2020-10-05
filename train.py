@@ -28,26 +28,24 @@ random.seed(SEED)
 
 def main(config):
     logger = config.get_logger('train')
-    train_dataloader, valid_dataloader, test_dataloader = makeDataLoader(config)
+    train_dataloader, valid_dataloader = makeDataLoader(config)
 
     model = makeModel(config)
     logger.info(model)
 
-    criterion = makeLoss(config)
-    metrics = makeMetrics(config)
+    # criterion = makeLoss(config)
+    # metrics = makeMetrics(config)
 
     optimizer = makeOptimizer(config, model)
     lr_scheduler = makeLrSchedule(config, optimizer, train_dataloader)
 
-    trainer = Trainer(model, criterion, metrics, optimizer,
+    trainer = Trainer(model, None, None, optimizer,
                       config=config,
                       data_loader=train_dataloader,
                       valid_data_loader=valid_dataloader,
-                      test_data_loader=test_dataloader,
+                      test_data_loader=None,
                       lr_scheduler=lr_scheduler)
-
     trainer.train()
-
 
 def run(config_fname):
     with open(config_fname, 'r', encoding='utf8') as f:

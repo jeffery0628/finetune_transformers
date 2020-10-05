@@ -9,7 +9,7 @@ import os
 
 from sklearn.model_selection import train_test_split
 from transformers import AutoConfig, AutoModelForMaskedLM, AutoTokenizer, \
-    LineByLineTextDataset, DataCollatorForLanguageModeling, Trainer, TrainingArguments, RobertaTokenizerFast
+    LineByLineTextDataset, DataCollatorForLanguageModeling, Trainer, TrainingArguments, RobertaTokenizerFast,PreTrainedModel
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
