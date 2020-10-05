@@ -84,12 +84,3 @@ trainer.save("xx")
 ```python
 python train.py
 ```
-
-
-
-
-
-
-
-
-
