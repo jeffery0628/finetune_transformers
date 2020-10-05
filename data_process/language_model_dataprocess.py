@@ -89,13 +89,14 @@ class LMDataset(BaseDataSet):
         features = []
         for exam in self.read_examples_from_file():
             for sentence_id, sentence in exam.sentence_dict.items():
-                # 观察数据，实体数量较多。而mask住全部实体会丢失句子过多语义信息。因此对于每个实体有60%的概率被mask住。
+                # 观察数据，实体数量较多。而mask住全部实体会丢失句子过多语义信息。因此对于每个实体有的50%概率被mask住/被mask住的实体字数不能超过句子长度20%。
                 label_text = sentence['sentence_text']
                 masked_text = list(label_text)
                 masked_pos = [0] * len(masked_text)
                 for label in sentence['sentence_labels']:
-                    random_float = random.random()
-                    if random_float < 0.5:
+                    # random_float = random.random()
+                    # if random_float < 0.5: # 对于每个实体有的50%概率被mask住
+                    if sum(masked_pos)/float(len(label_text)) < 0.2: # 被mask住的实体字数不能超过句子长度20%
                         start_pos = int(label['start_pos'])
                         end_pos = int(label['end_pos'])
                         masked_text[start_pos:end_pos] = [self.tokenizer.mask_token] * (end_pos - start_pos)
